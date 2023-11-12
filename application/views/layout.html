@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            padding: 0px;
+            margin: 0px;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: rgb(212, 211, 211);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        section.content {
+            min-height: calc(100vh - 100px);
+            width: 576px;
+            margin: 0px auto;
+        }
+
+        header ul li {
+            display: inline-block;
+        }
+
+        div.new-post-box {
+            padding: 5px;
+        }
+
+        div.post-container {
+            border: 1px black solid;
+            margin: 50px auto;
+            text-align: center;
+            padding: 5px;
+        }
+
+        img {
+            width: 550 px;
+        }
+
+        div.pagination-box {
+            border: 1px solid black;
+            text-align: center;
+            padding: 5px;
+            margin-bottom: 30px;
+        }
+
+        .Box {
+            width: 350px;
+            height: 60vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0px auto;
+            border: 1px black solid;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .Box-signup {
+            width: 350px;
+            height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0px auto;
+            border: 1px black solid;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .label{
+            display: block;
+            margin-bottom: 5px;
+            text-transform: capitalize;
+        }
+
+        .Input-box {
+            width: 230.81px;  
+            height: 35px;
+            margin-top: 8px; 
+            border-radius: 5px;
+        }
+
+        .btn{
+            width: 230.81px;
+            height: 30px;
+            background-color: #3797EF;
+            color: white;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        .a {
+           margin-bottom: 10px;
+        }
+
+        .textbox {
+            margin-left: 5px;
+        }
+
+    </style>
+    {% if title %}
+        <title>{{ title }} - Website</title>
+    {% else %}
+        <title>Website</title>
+    {% endif %}
+</head>
+<body>
+    <section class="content">
+        <div class="alert-box">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        {% block content %}{% endblock %}
+        {% include "components/footer.html" %}
+    </section>
+</body>
+</html>

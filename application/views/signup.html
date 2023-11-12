@@ -1,0 +1,98 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="Box-signup">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }} 
+            <h2 style="margin-bottom: 30px; display: flex; justify-content: center;">Daftar</h2>
+
+            <div class="">
+                {{ form.username.label(class="label") }}
+
+                {% if form.username.errors%}
+                    {{ form.username(class="") }}
+                    <div class="">
+                        {% for error in form.username.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.username(class="Input-box") }}
+                {% endif %}
+
+            </div>
+
+            <div class="">
+                {{ form.fullname.label(class="label") }}
+
+                {% if form.fullname.errors%}
+                    {{ form.fullname(class="") }}
+                    <div class="">
+                        {% for error in form.fullname.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.fullname(class="Input-box") }}
+                {% endif %}
+
+            </div>
+
+            <div class="">
+                {{ form.email.label(class="label") }}
+
+                {% if form.email.errors%}
+                    {{ form.email(class="") }}
+                    <div class="">
+                        {% for error in form.email.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.email(class="Input-box") }}
+                {% endif %}
+
+            </div>
+
+            <div class="">
+                {{ form.password.label(class="label") }}
+
+                {% if form.password.errors%}
+                    {{ form.password(class="") }}
+                    <div class="">
+                        {% for error in form.password.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.password(class="Input-box") }}
+                {% endif %}
+
+            </div>
+
+            <div class="">
+                {{ form.confirm_password.label(class="label") }}
+
+                {% if form.confirm_password.errors%}
+                    {{ form.confirm_password(class="") }}
+                    <div class="">
+                        {% for error in form.password.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.confirm_password(class="Input-box") }}
+                {% endif %}
+
+            </div>
+        <div class="">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+        <small class="">
+            <a href="{{ url_for('login') }}">Sudah punya akun?</a>
+        </small>
+        
+
+    </form>
+</div>
+{% endblock content %}
