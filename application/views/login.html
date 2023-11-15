@@ -2,7 +2,7 @@
 
 {% block content %}
 	<div class="Box">
-        <form method="POST" action="" class="form-login">
+        <form method="POST" action="">
 			{{ form.hidden_tag() }}
 				<h2 style="margin-bottom: 30px; display: flex; justify-content: center;">Login</h2>
 
@@ -40,7 +40,7 @@
 			<div class="Info">
 				{{ form.submit(class="btn btn-outline-info") }}
 			</div>
-			<small class="Info2">
+			<small class="Info2" >
 				<a href="{{ url_for('forgotpassword') }}">Lupa Kata Sandi?</a>
 				<br>
 				<a href="{{ url_for('signup') }}">Belum punya akun ?</a>

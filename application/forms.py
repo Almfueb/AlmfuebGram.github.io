@@ -12,7 +12,7 @@ class LoginForm(FlaskForm):
     submit              = SubmitField("login")
 
 class SignUpForm(FlaskForm):
-    username            = StringField("username", validators=[DataRequired(), Length(min=4, max=12), exists_username])
+    username            = StringField("username", validators=[DataRequired(), Length(min=4, max=16), exists_username])
     fullname            = StringField("full name", validators=[DataRequired(), Length(min=4, max=16)])
     email               = EmailField("email", validators=[DataRequired(), Email(), exists_email])
     password            = PasswordField("password", validators=[DataRequired(), Length(min=8)])
@@ -21,7 +21,8 @@ class SignUpForm(FlaskForm):
 
     
 class EditProfileForm(SignUpForm):
-    username            = StringField("username", validators=[DataRequired(), Length(min=4, max=12)])
+    username            = StringField("username", validators=[DataRequired(), Length(min=4, max=16)])
+    fullname            = StringField("fullname", validators=[DataRequired(), Length(min=4, max=16)])
     password            = None    
     confirm_password    = None
     email               = None

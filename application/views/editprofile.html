@@ -2,15 +2,15 @@
 
 {% block content %}
     <div class="Box">
-        <form method="POST" enctype="multipart/form-data" class="form-login">
+        <form method="POST" action="" class="form-login">
             {{ form.hidden_tag() }}
                 <h2 style="margin-bottom: 50px; display: flex; justify-content: center;">Edit Profile</h2>
             
-                <div class="Form-Username">
+                <div class="">
                     {{ form.username.label(class="label") }}
 
                     {% if form.username.errors%}
-                        {{ form.username(class="Input") }}
+                        {{ form.username(class="") }}
                         <div class="">
                             {% for error in form.username.errors %}
                                 <span>{{ error }}</span>
@@ -22,11 +22,11 @@
 
                 </div>
                 <br>
-                <div class="Form-Username">
+                <div class="">
                     {{ form.fullname.label(class="label") }}
 
                     {% if form.fullname.errors%}
-                        {{ form.fullname(class="Input") }}
+                        {{ form.fullname(class="") }}
                         <div class="">
                             {% for error in form.fullname.errors %}
                                 <span>{{ error }}</span>
@@ -38,11 +38,11 @@
 
                 </div>
                 <br>
-                <div class="Form-Username">
+                <div class="">
                     {{ form.bio.label(class="label") }}
 
                     {% if form.bio.errors%}
-                        {{ form.bio(class="Input") }}
+                        {{ form.bio(class="") }}
                         <div class="">
                             {% for error in form.bio.errors %}
                                 <span>{{ error }}</span>
@@ -65,6 +65,8 @@
             <div class="Info">
                 {{ form.submit(class="btn btn-outline-info") }}
             </div>
+            <br>
+            <a href="{{ url_for('resetpassword') }}">Reset Password</a>
             
 
         </form>

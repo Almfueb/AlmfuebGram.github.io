@@ -7,6 +7,11 @@ from application.utils import save_image
 import os
 import sqlite3
 
+def get_user_posts(user_id, page=1, per_page=3):
+    return Post.query.filter_by(author_id=user_id)\
+                     .order_by(Post.post_date.desc())\
+                     .paginate(page=page, per_page=per_page)
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -65,11 +70,38 @@ def signup():
     return render_template('signup.html', title="Signup", form=form)
 
 
+@app.route('/', methods=['GET', 'POST'])
+@login_required
+def index():
+    form = CreatePostForm()
+    caption = " "
+    if form.validate_on_submit():
+        caption = form.caption.data if form.caption.data else " "
+        post = Post(
+            author_id = current_user.id,
+            caption = caption
+        )
+        post.photo = save_image(form.post_pic.data)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your image has been posted 🩷!', 'success')
+
+    page = request.args.get('page', 1, type=int)
+    posts = get_user_posts(current_user.id, page=page, per_page=3)
+
+    return render_template('index.html', title='Home', form=form, posts=posts)
+
+
 @app.route('/<string:username>')
 @login_required
 def profile(username):
-    default_picture_url = "/static/images/default.png"
-    return render_template('profile.html',default_picture_url=default_picture_url)
+    user = User.query.filter_by(username=username).first()
+    default_picture_url = "/application/static/images/default.png"
+
+    page = request.args.get('page', 1, type=int)
+    posts = get_user_posts(current_user.id, page=page, per_page=9)
+
+    return render_template('profile.html',default_picture_url=default_picture_url, posts=posts)
 
 
 @app.route('/editprofile', methods=['GET', 'POST'])
@@ -86,6 +118,7 @@ def edit():
 
         if form.profile_pic.data:
             pass
+        
 
         db.session.commit()
         flash('Profile updated', 'success')
@@ -97,29 +130,6 @@ def edit():
     
     return render_template('editprofile.html', title=f'Edit {current_user.username} Profile', form=form)
     
-
-
-@app.route('/', methods=['GET', 'POST'])
-@login_required
-def index():
-    form = CreatePostForm()
-
-    if form.validate_on_submit():
-        post = Post(
-            author_id = current_user.id,
-            caption = form.caption.data
-        )
-        post.photo = save_image(form.post_pic.data)
-        db.session.add(post)
-        db.session.commit()
-        flash('Your image has been posted ❤!', 'success')
-    
-    page = request.args.get('page', 1, type=int)
-    posts = Post.query.filter_by(author_id = current_user.id)\
-            .order_by(Post.post_date.desc())\
-            .paginate(page=page, per_page=3)
-
-    return render_template('index.html', title='Home', form=form, posts=posts)
 
 
 @app.route('/forgotpassword')
