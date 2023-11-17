@@ -1,9 +1,9 @@
 from flask import render_template, redirect, url_for, flash,request, make_response, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
-from application import app
+from application import app, db
 from application.models import *
 from application.forms import *
-from application.utils import save_image
+from application.utils import save_image1, save_profile
 import os
 import sqlite3
 
@@ -81,7 +81,7 @@ def index():
             author_id = current_user.id,
             caption = caption
         )
-        post.photo = save_image(form.post_pic.data)
+        post.photo = save_image1(form.post_pic.data)
         db.session.add(post)
         db.session.commit()
         flash('Your image has been posted 🩷!', 'success')
@@ -106,7 +106,7 @@ def profile(username):
 
 @app.route('/editprofile', methods=['GET', 'POST'])
 @login_required
-def edit():
+def editprofile():
     form = EditProfileForm()
 
     if form.validate_on_submit():
@@ -117,19 +117,19 @@ def edit():
         user.bio = form.bio.data
 
         if form.profile_pic.data:
-            pass
-        
+            if form.profile_pic.validate(form):
+                user.profile_pic = save_profile(form.profile_pic.data)
 
         db.session.commit()
         flash('Profile updated', 'success')
         return redirect(url_for('profile', username=current_user.username))
-    
+
     form.username.data = current_user.username
     form.fullname.data = current_user.fullname
     form.bio.data = current_user.bio
-    
+    form.profile_pic.data = current_user.profile_pic
+
     return render_template('editprofile.html', title=f'Edit {current_user.username} Profile', form=form)
-    
 
 
 @app.route('/forgotpassword')
@@ -171,7 +171,7 @@ def createpost():
             author_id = current_user.id,
             caption = form.caption.data
         )
-        post.photo = save_image(form.post_pic.data)
+        post.photo = save_image1(form.post_pic.data)
         db.session.add(post)
         db.session.commit()
         flash('your image has been posted ❤️','success')
@@ -181,10 +181,22 @@ def createpost():
     return render_template('index.html', title='Home', form=form, posts=posts)
 
 
-@app.route('/editpost')
-def editpost():
+@app.route('/edit_post/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def edit_post():
+    post = Post.query.get(id)
     form = EditPostForm()
-    return render_template('editpost.html', title='Edit Post', form=form)
+    if form.validate_on_submit():
+        post.caption = form.caption.data
+        db.session.commit()
+        flash('Your post has been updated!', 'success')
+        return redirect(url_for('profile', username=current_user.username))
+
+    elif request.method == 'GET':
+        form.caption.data = post.caption
+
+    return render_template('edit_post.html', title='Edit Post', form=form)
+
 
 
 @app.route('/about')
@@ -193,19 +205,21 @@ def about():
 
 
 
-@app.route('/like/<int:post_id>', methods=['POST'])
+@app.route('/like', methods=['GET', 'POST'])
 @login_required
-def like(post_id):
-    like= Like(user_id=current_user.id, post_id=post_id)
+def like():
+    data = request.json
+    post_id = int(data['postid'])
+    like = Like.query.filter(user_id=current_user.id, post_id=post_id)
     if not like:
         like = Like(user_id=current_user.id, post_id=post_id )
         db.session.add(like)
         db.session.commit()
-        return make_response(200, jsonify({"status" : True}))
+        return make_response(jsonify({"status" : True}))
 
     db.session.delete(like)
     db.session.commit()
-    return make_response(200, jsonify({"status" : True}))
+    return make_response(jsonify({"status" : True}))
 
 if __name__ == '__main__':
     app.run(debug=True)
