@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <div class="form-box" style = "border: 1px black solid;">
+    <div class="form-box" style = "border: 1px black solid; border-radius: 10px;">
         <h2>Create a new post</h2>
         <form method = "POST" enctype = "multipart/form-data">
             {{ form.hidden_tag() }}
@@ -24,20 +24,19 @@
             </div>
         </form>
     </div>
-
     <div class="post-container">
         {% for post in posts %}
-            <div class="post" style = "border: 1px black solid; margin: 10px 0px;">
+            <div class="post" style = "border: 1px black solid; margin: 10px 0; padding: 5px; border-radius: 10px;">
                 <div class="post-header" style="display: flex; gap: 10px;">    
                     <a href="{{ url_for('profile', username=current_user.username) }}" style="text-decoration: none; color: inherit; border-radius: 50px; height: 15px; width: 40px;">
-                        <img src="{{ url_for('static', filename='images/' + post.posts_owner.profile_pic) }}" alt="Post owner" style="height: 10px; width:20px; border-radius: 50px;">
+                        <img src="{{ url_for('static', filename=current_user.profile_pic) }}" alt="Post owner" style="object-fit: cover ; margin:4px; height: 50px; width:50px; border-radius: 50px;">
                     </a>
-                    <h2>{{ post.posts_owner.username }}</h2>
+                    <h2 style="margin-left: 10px;">{{ post.posts_owner.username }}</h2>
+                    <a href="{{ url_for('edit_post', post_id=post.id)}} " style="margin-left: 339px;">Edit Post</a>
                 </div>
                 
-                <img src="{{ url_for('static', filename='' + post.photo) }}" alt="Post Image" style="max-width: 100%; max-height: 250px;">
+                <img src="{{ url_for('static', filename='' + post.photo) }}" alt="Post Image" style="max-width: 100%; max-height: 230px;">
                 <p>{{ post.caption }}</p>
-                <a href="{{ url_for('edit_post', post_id=post_id)}}">Edit Post</a>
 
                 <div class="post-footer">
                     <span id="likeBtn" data-post-id="{{ post.id }}">❤️</span><span id="likeCounter">{{post.likes | length}}</span>
@@ -47,31 +46,29 @@
         {% endfor %}
     </div>
     <script>
-        document.querySelectorAll("#likeBtn").forEach(btn =>{
+        document.querySelectorAll("#likeBtn").forEach(btn => {
             btn.addEventListener('click', function(){
-                // console.log(this.dataset.postId);
                 const xhr = new XMLHttpRequest();
                 xhr.open('POST', 'http://127.0.0.1:5000/like', true);
                 xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
 
-                xhr.onload = function(){
-                    if (xhr.status === 200){
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
                         const response = JSON.parse(xhr.responseText);
                         console.log(response.status);
-                    }
+                    } 
                 };
-                const data = JSON.stringify({'postId': this.dataset.postId});
+                const data = JSON.stringify({ 'postId': this.dataset.postId });
                 xhr.send(data);
-
             })
         })
     </script>
     <div class="pagination-box">
         {% for page_number in posts.iter_pages() %}
             {% if page_number == posts.page %}
-                <a href="{{ url_for('index', page=page_number) }}" style="color:red;">{{ page_number }}</a>
-            {% else %}  
-                <a href="{{ url_for('index', page=page_number) }}" style="color:black;">{{ page_number }}</a>
+                <a href="{{ url_for('index', page=page_number) }}" style="color: red;">{{page_number}}</a>
+            {% else %}
+                <a href="{{ url_for('index', page=page_number) }}" style="color: black;">{{page_number}}</a>
             {% endif %}
         {% endfor %}
     </div>

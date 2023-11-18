@@ -1,11 +1,11 @@
-from flask import render_template, redirect, url_for, flash,request, make_response, jsonify
+from flask import render_template, redirect, url_for, flash, request, make_response,jsonify
 from flask_login import login_user, login_required, logout_user, current_user
-from application import app, db
+
+from application import app
+import os
 from application.models import *
 from application.forms import *
 from application.utils import save_image1, save_profile
-import os
-import sqlite3
 
 def get_user_posts(user_id, page=1, per_page=3):
     return Post.query.filter_by(author_id=user_id)\
@@ -74,20 +74,19 @@ def signup():
 @login_required
 def index():
     form = CreatePostForm()
-    caption = " "
     if form.validate_on_submit():
-        caption = form.caption.data if form.caption.data else " "
         post = Post(
             author_id = current_user.id,
-            caption = caption
+            caption = form.caption.data
         )
         post.photo = save_image1(form.post_pic.data)
         db.session.add(post)
         db.session.commit()
         flash('Your image has been posted 🩷!', 'success')
+        return redirect(url_for('profile', username=current_user.username))
 
     page = request.args.get('page', 1, type=int)
-    posts = get_user_posts(current_user.id, page=page, per_page=3)
+    posts = Post.query.filter_by(author_id = current_user.id).order_by(Post.post_date.desc()).paginate(page=page, per_page=3)
 
     return render_template('index.html', title='Home', form=form, posts=posts)
 
@@ -162,64 +161,39 @@ def verificationpassword():
     form = VerificationResetPasswordForm()
     return render_template('verificationpassword.html', title='Verification Password', form=form)
 
-@app.route('/createpost')
-def createpost():
-    form = CreatePostForm()
 
-    if form.validate_on_submit():
-        post = Post(
-            author_id = current_user.id,
-            caption = form.caption.data
-        )
-        post.photo = save_image1(form.post_pic.data)
-        db.session.add(post)
-        db.session.commit()
-        flash('your image has been posted ❤️','success')
-
-    posts = Post.query.filter_by(author_id = current_user.id).all()
-
-    return render_template('index.html', title='Home', form=form, posts=posts)
-
-
-@app.route('/edit_post/<int:post_id>', methods=['GET', 'POST'])
-@login_required
-def edit_post():
-    post = Post.query.get(id)
+@app.route('/editpost/<int:post_id>', methods=['GET', 'POST'])
+def edit_post(post_id):
     form = EditPostForm()
+
+    post = Post.query.get(post_id)
     if form.validate_on_submit():
         post.caption = form.caption.data
         db.session.commit()
         flash('Your post has been updated!', 'success')
-        return redirect(url_for('profile', username=current_user.username))
+        return redirect(url_for('index', username=current_user.username))
 
     elif request.method == 'GET':
         form.caption.data = post.caption
 
-    return render_template('edit_post.html', title='Edit Post', form=form)
-
-
-
-@app.route('/about')
-def about():
-    return render_template('about.html', title='About')
-
+    return render_template('editpost.html', title='Edit Post', form=form, post=post)
 
 
 @app.route('/like', methods=['GET', 'POST'])
 @login_required
 def like():
     data = request.json
-    post_id = int(data['postid'])
-    like = Like.query.filter(user_id=current_user.id, post_id=post_id)
+    post_id = int(data['postId'])
+    like = Like.query.filter_by(user_id=current_user.id,post_id=post_id).first()
     if not like:
-        like = Like(user_id=current_user.id, post_id=post_id )
+        like = Like(user_id=current_user.id, post_id=post_id)
         db.session.add(like)
         db.session.commit()
-        return make_response(jsonify({"status" : True}))
-
+        return make_response(jsonify({"status" : True}), 200)
+    
     db.session.delete(like)
     db.session.commit()
-    return make_response(jsonify({"status" : True}))
+    return make_response(jsonify({"status" : False}), 200)
 
 if __name__ == '__main__':
     app.run(debug=True)

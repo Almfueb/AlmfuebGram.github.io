@@ -17,32 +17,58 @@
             align-items: center;
             height: 100vh;
             margin: 0 auto;
+            font-family: Arial, sans-serif;
         }
 
         section.content {
             min-height: calc(100vh - 100px);
             height: 90vh;
             width: 576px;
-            margin: 0px auto;
+            margin: 0 auto;
         }
 
-        header ul li {
-            display: inline-block;
+        .Box {
+            width: 50%;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        div.new-post-box {
-            padding: 5px;
+        .label{
+            display: block;
+            margin-bottom: 5px;
+            text-transform: capitalize;
+            margin-top: 5px;
         }
-
+        
         div.post-container {
-            border: 1px black solid;
             margin: 50px auto;
             text-align: center;
             padding: 5px;
         }
 
-        img {
-            width: 550 px;
+        .Input-box {
+            width: 230.81px;  
+            height: 35px;
+            margin-top: 8px;
+            padding-left: 5px;
+            border-radius: 5px;
+            border: 1px gray solid;
+        }
+
+        .btn {
+            width: 230.81px;
+            height: 30px;
+            background-color: #3797EF;
+            color: white;
+            margin-top: 20px;
+            border: 0.5px black solid;
+            box-sizing: border-box; 
+        }
+        
+        .profile-card {
+            padding: 20px;
         }
 
         div.pagination-box {
@@ -50,39 +76,6 @@
             text-align: center;
             padding: 5px;
             margin-bottom: 30px;
-        }
-
-        .Box {
-            width: 50%;
-            margin: 0 auto;
-            margin-top: 50px;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .Box-signup {
-            width: 350px;
-            height: 80vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0px auto;
-            border: 1px black solid;
-            border-radius: 5px;
-            background-color: white;
-        }
-
-        .label{
-            display: block;
-            margin-bottom: 5px;
-            text-transform: capitalize;
-        }
-
-        .Input-box {
-            width: 230.81px;  
-            height: 35px;
-            margin-top: 8px; 
-            border-radius: 5px;
         }
 
         .btn{
@@ -94,26 +87,14 @@
             margin-top: 10px;
         }
         
-        .a {
-           margin-bottom: 10px;
-        }
-
-        .textbox {
-            margin-left: 5px;
-        }
-        
         .image-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
         }
 
-        .profile-photo {
-            width: 150px;
-            height: 150px;
-            border: 1px black solid;
+        .info {
+            flex: 1;
         }
-
 
     </style>
     {% if title %}
@@ -135,7 +116,6 @@
                 {% endif %}
             {% endwith %}
         </div>
-
         {% block content %}{% endblock %}
         {% include "components/footer.html" %}
     </section>
