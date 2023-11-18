@@ -148,7 +148,7 @@ def resetpassword():
             user.password = form.new_password.data
             db.session.commit()
             flash('password reset successfully!', 'success')
-            return redirect(url_for('index'))
+            return redirect(url_for('profile', username=current_user.username))
         else:
             flash('old password is incorrect!', 'danger')
 
