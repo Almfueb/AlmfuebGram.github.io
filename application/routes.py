@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, flash, request, make_response,jsonify
 from flask_login import login_user, login_required, logout_user, current_user
-
+from flask import jsonify
 from application import app
 import os
 from application.models import *
@@ -95,12 +95,11 @@ def index():
 @login_required
 def profile(username):
     user = User.query.filter_by(username=username).first()
-    default_picture_url = "/application/static/images/default.png"
 
     page = request.args.get('page', 1, type=int)
     posts = get_user_posts(current_user.id, page=page, per_page=9)
 
-    return render_template('profile.html',default_picture_url=default_picture_url, posts=posts)
+    return render_template('profile.html', posts=posts)
 
 
 @app.route('/editprofile', methods=['GET', 'POST'])
@@ -179,21 +178,27 @@ def edit_post(post_id):
     return render_template('editpost.html', title='Edit Post', form=form, post=post)
 
 
-@app.route('/like', methods=['GET', 'POST'])
+@app.route('/like', methods=['POST'])
 @login_required
 def like():
     data = request.json
     post_id = int(data['postId'])
-    like = Like.query.filter_by(user_id=current_user.id,post_id=post_id).first()
+    like = Like.query.filter_by(user_id=current_user.id, post_id=post_id).first()
+
     if not like:
         like = Like(user_id=current_user.id, post_id=post_id)
         db.session.add(like)
         db.session.commit()
-        return make_response(jsonify({"status" : True}), 200)
-    
-    db.session.delete(like)
-    db.session.commit()
-    return make_response(jsonify({"status" : False}), 200)
+        status = True
+    else:
+        db.session.delete(like)
+        db.session.commit()
+        status = False
+
+    # Retrieve the updated like count
+    updated_like_count = Like.query.filter_by(post_id=post_id).count()
+
+    return jsonify({"status": status, "likeCount": updated_like_count})
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,14 +1,15 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <div class="profile-card" style="border: 1px black solid; border-radius: 10px; width: 100%; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-        {% if current_user.profile_pic %}
+    <div class="buttons" style="display: flex; flex-direction: row; padding: 10px; border-radius: 10px; margin: 3px;">
+        <a class="btn2" href="{{ url_for('index') }}" style="border-radius: 10px; width:100px; height:30px; color:black;display: flex; justify-content: center; align-items: center; background-color: rgb(207, 207, 207); box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); text-decoration: none;">Home</a>
+        <a class="btn2" href="{{ url_for('profile', username=current_user.username) }}" style="border-radius: 10px; width:100px; height:30px; color:black;display: flex; justify-content: center; align-items: center; background-color: rgb(207, 207, 207); box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); text-decoration: none;">Profile</a>
+        <a class="btn2" href="{{ url_for('logout') }}" style="border-radius: 10px; width:100px; height:30px; color:black;display: flex; justify-content: center; align-items: center; background-color: rgb(207, 207, 207); box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); text-decoration: none;">Logout</a>
+    </div>
+    <div class="profile-card" style="border: 2px black solid; border-radius: 10px; width: 100%; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        {% if current_user.profile_pic and current_user.profile_pic != '' %}
             <div class="profile-photo" style="height: 100px; border: 1px black solid; border-radius: 50%; float: left; width: 20%;">
                 <img src="{{ url_for('static', filename=current_user.profile_pic) }}" alt="Profile pic" style="height:100px; align-items: center; justify-content: center; margin: 0 auto; border-radius: 50%; background-color: white; object-fit: cover; width: 100%; display: block;" >
-            </div>
-        {% else %}
-            <div class="profile-photo" style="height: auto; border: 1px black solid; border-radius: 50%;float: left; width: 50%;"> 
-                <img src="{{ default_picture_url }}" alt="default pic" style="width:150px; height:150px; display: flex; align-items: center; justify-content: center; margin: 0 auto; border-radius: 50%; background-color: white; object-fit: cover;">
             </div>
         {% endif %}
         <h2 style="margin-bottom: 10px; margin-left: 150px;">{{ current_user.fullname }}</h2>
@@ -26,15 +27,17 @@
                 <p style="display: flex; justify-content: center; align-items: center;">Followings</p>
             </div>
         </div>
+        <br>
+        <p style="margin-left: 150px;">{{current_user.bio}}</p>
         <a class="btn btn-primary" href="{{ url_for('editprofile') }}" style=" margin-left: 150px; width:100px; height:30px; color:black;display: flex; justify-content: center; align-items: center; background-color: rgb(207, 207, 207); box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); text-decoration: none;">Edit Profile</a>
     </div>
     <br>
     <br>
-    <div class="image-container" style="border: 1px black solid; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    <div class="image-container" style="border: 2px black solid; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         {% for post in posts %}
             <div class="image-box">
                 <div class="post" style = "margin: 13px; width: 163px; height: 163px; overflow: hidden; border-radius: 3px;">
-                    <img src="{{ url_for('static', filename='' + post.photo) }}" alt="Post Image" style="width:100%; height:100%; object-fit:cover; border-radius: 3px; border: 1px rgb(221, 221, 221) solid; box-shadow: 0 0 100px rgba(0, 0, 0, 0.1);">
+                    <img src="{{ url_for('static', filename='' + post.photo) }}" alt="Post Image" style="width:100%; height:100%; object-fit:cover; border-radius: 5px; border: 1px rgb(221, 221, 221) solid; box-shadow: 0 0 100px rgba(0, 0, 0, 0.1);">
                 </div>
             </div>
             
