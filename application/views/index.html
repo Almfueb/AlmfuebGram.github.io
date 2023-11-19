@@ -40,7 +40,7 @@
                         <img src="{{ url_for('static', filename=current_user.profile_pic) }}" alt="Post owner" style="object-fit: cover ; margin:4px; height: 50px; width:50px; border-radius: 50px;">
                     </a>
                     <h2 style="margin-left: 10px;">{{ post.posts_owner.username }}</h2>
-                    <a href="{{ url_for('edit_post', post_id=post.id)}} " style="margin-left: 360px; text-decoration: none; color: inherit; background-color: rgb(207, 207, 207); color: black; height: 18px; border: 1px  solid; border-radius: 3px;">Edit</a>
+                    <a href="{{ url_for('edit_post', post_id=post.id)}} " style="margin-left: 350px; text-decoration: none; color: inherit; background-color: rgb(207, 207, 207); color: black; height: 18px; border: 1px  solid; border-radius: 3px;">Edit</a>
                 </div>
                 
                 <img src="{{ url_for('static', filename='' + post.photo) }}" alt="Post Image" style="max-width: 100%; max-height: 230px; border: 1px rgb(221, 221, 221) solid; box-shadow: 0 0 100px rgba(0, 0, 0, 0.1);">
