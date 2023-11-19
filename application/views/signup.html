@@ -77,10 +77,10 @@
                     {{ form.confirm_password.label(class="label") }}
 
                     {% if form.confirm_password.errors%}
-                        {{ form.confirm_password(class="") }}
+                        {{ form.confirm_password(class="Input-box") }}
                         <div class="">
-                            {% for error in form.password.errors %}
-                                <span>{{ error }}</span>
+                            {% for error in form.confirm_password.errors %}
+                                <span style="color: red; -webkit-text-stroke: 0.05px black; font-size: 14px;">{{ error }}</span>
                             {% endfor %}
                         </div>
                     {% else %}
